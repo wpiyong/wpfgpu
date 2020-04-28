@@ -1,0 +1,86 @@
+﻿<Window x:Class="ImageProcessing.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions" 
+        xmlns:local="clr-namespace:ImageProcessing.ViewModels"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel>
+            <Grid DataContext="{Binding ControlVM}">
+                <ToolBarTray VerticalAlignment="Center" >
+                    <ToolBar ToolBarTray.IsLocked="True" VerticalAlignment="Center">
+                        <Button ToolTip="settings" Style="{StaticResource ToolbarButton}"
+                            Command="{Binding CommandSettings}">
+                            <Image Source="..\Images\settings.png" Height="32"/>
+                        </Button>
+                    </ToolBar>
+                    <ToolBar ToolBarTray.IsLocked="True" VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal">
+                            <ComboBox ToolTip="Processing Methods" Margin="5,0" ItemsSource="{Binding ProcMethods}" SelectedItem="{Binding Method, Mode=TwoWay}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
+                    </ToolBar>
+                    <ToolBar ToolBarTray.IsLocked="True" VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox ToolTip="gamma" VerticalContentAlignment="Center" Width="24" Height="24" IsThreeState="False" IsChecked="{Binding Path=UsingGamma, Mode=TwoWay}" VerticalAlignment="Bottom"></CheckBox>
+                            <CheckBox ToolTip="manual mask" VerticalContentAlignment="Center" Width="24" Height="24" IsThreeState="False" IsChecked="{Binding Path=ManualMask, Mode=TwoWay}" VerticalAlignment="Bottom"></CheckBox>
+                            <CheckBox ToolTip="foreground line marker" VerticalContentAlignment="Center" Width="24" Height="24" IsThreeState="False" IsChecked="{Binding Path=ForegroundLineMarker, Mode=TwoWay}" VerticalAlignment="Bottom"></CheckBox>
+                            <Button Width="50" Content="Clear" ToolTip="clear line markers" Style="{StaticResource ToolbarButton}"
+                                    Command="{Binding CommandClearLineMarkers}"></Button>
+                            <Button Width="50" Content="Post Processing" ToolTip="GPU Processing" Style="{StaticResource ToolbarButton}"
+                                    Command="{Binding CommandGPUProcessing}"></Button>
+                        </StackPanel>
+                    </ToolBar>
+                    <ToolBar ToolBarTray.IsLocked="True" VerticalAlignment="Center">
+                        <Button ToolTip="Open file" Style="{StaticResource ToolbarButton}"
+                            Command="{Binding CommandOpenFile}">
+                            <Image Source="..\Images\folder.png" Height="32"/>
+                        </Button>
+                    </ToolBar>
+                </ToolBarTray>
+            </Grid>
+        </StackPanel>
+        <Border Margin="10" Grid.Row="1">
+            <Grid DataContext="{Binding ControlVM}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="2" Background="White">
+                    <Image x:Name="ImageProc" Source="{Binding ImageProc}" VerticalAlignment="Center"></Image>
+                </Grid>
+                <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
+                <Grid Grid.Column="0">
+                    <Image x:Name="ImageOrig" Source="{Binding ImageOrig}" VerticalAlignment="Center"></Image>
+                    <Viewbox Stretch="Fill" Width="{Binding ElementName=ImageOrig, Path=ActualWidth}" Height="{Binding ElementName=ImageOrig, Path=ActualHeight}">
+                        <Canvas Background="Transparent"  x:Name="CanvasDraw" IsHitTestVisible="True" Width="{Binding Path=Width}" Height="{Binding Path=Height}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="PreviewMouseDown">
+                                    <ei:CallMethodAction MethodName="MouseDownHandler" TargetObject="{Binding}" />
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="PreviewMouseMove">
+                                    <ei:CallMethodAction MethodName="MouseMoveHandler" TargetObject="{Binding}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </Canvas>
+                    </Viewbox>
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
