@@ -1,0 +1,15 @@
+C:\opencv\Test\ImageProcessing\ImageProcLibOpenGL\obj\Debug\ImageProcLibOpenGL.csproj.CoreCompileInputs.cache
+C:\opencv\Test\ImageProcessing\ImageProcLibOpenGL\bin\Debug\ImageProcLibOpenGL.dll.config
+C:\opencv\Test\ImageProcessing\ImageProcLibOpenGL\bin\Debug\ImageProcLibOpenGL.dll
+C:\opencv\Test\ImageProcessing\ImageProcLibOpenGL\bin\Debug\ImageProcLibOpenGL.pdb
+C:\opencv\Test\ImageProcessing\ImageProcLibOpenGL\bin\Debug\OpenTK.dll
+C:\opencv\Test\ImageProcessing\ImageProcLibOpenGL\bin\Debug\OpenTK.GLControl.dll
+C:\opencv\Test\ImageProcessing\ImageProcLibOpenGL\bin\Debug\OpenTK.pdb
+C:\opencv\Test\ImageProcessing\ImageProcLibOpenGL\bin\Debug\OpenTK.xml
+C:\opencv\Test\ImageProcessing\ImageProcLibOpenGL\bin\Debug\OpenTK.GLControl.pdb
+C:\opencv\Test\ImageProcessing\ImageProcLibOpenGL\bin\Debug\OpenTK.GLControl.xml
+C:\opencv\Test\ImageProcessing\ImageProcLibOpenGL\obj\Debug\ImageProcLibOpenGL.csproj.CopyComplete
+C:\opencv\Test\ImageProcessing\ImageProcLibOpenGL\obj\Debug\ImageProcLibOpenGL.dll
+C:\opencv\Test\ImageProcessing\ImageProcLibOpenGL\obj\Debug\ImageProcLibOpenGL.pdb
+C:\opencv\Test\ImageProcessing\ImageProcLibOpenGL\obj\Debug\ImageProcLibOpenGL.Properties.Resources.resources
+C:\opencv\Test\ImageProcessing\ImageProcLibOpenGL\obj\Debug\ImageProcLibOpenGL.csproj.GenerateResource.cache
