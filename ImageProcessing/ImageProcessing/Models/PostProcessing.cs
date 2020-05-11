@@ -10,7 +10,7 @@ using ImageProcLibOpenGL;
 namespace ImageProcessing.Models
 {
 
-    public delegate void ProcessingFinishedHandler(WriteableBitmap wBmp);
+    public delegate void ProcessingFinishedHandler(System.Drawing.Bitmap wBmp);
 
     public class PostProcessing
     {
@@ -34,7 +34,7 @@ namespace ImageProcessing.Models
             _worker.Start();
         }
 
-        void RaiseProcessingFinishedEvent(WriteableBitmap wBmp)
+        void RaiseProcessingFinishedEvent(System.Drawing.Bitmap wBmp)
         {
             processingFinished?.Invoke(wBmp);
         }
@@ -67,7 +67,7 @@ namespace ImageProcessing.Models
                     renderer.setBitmap(img);
                     renderer.setEffect(effect, (float)App.appSettings.ABFTheta);
                     renderer.DrawFrame();
-                    RaiseProcessingFinishedEvent(new WriteableBitmap(ToBitmapImage(renderer.m_BmpDst)));
+                    RaiseProcessingFinishedEvent(renderer.m_BmpDst);
                 }
                 else
                 {
@@ -94,24 +94,6 @@ namespace ImageProcessing.Models
             _wh.Set();
             _worker.Join();         // Wait for the consumer's thread to finish.
             _wh.Close();
-        }
-
-        private BitmapImage ToBitmapImage(System.Drawing.Bitmap bitmap)
-        {
-            using (var memory = new MemoryStream())
-            {
-                bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Png);
-                memory.Position = 0;
-
-                var bitmapImage = new BitmapImage();
-                bitmapImage.BeginInit();
-                bitmapImage.StreamSource = memory;
-                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-                bitmapImage.EndInit();
-                bitmapImage.Freeze();
-
-                return bitmapImage;
-            }
         }
     }
 }

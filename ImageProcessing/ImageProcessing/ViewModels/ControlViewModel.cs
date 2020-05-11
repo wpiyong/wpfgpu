@@ -260,8 +260,9 @@ namespace ImageProcessing.ViewModels
         List<Line> LineMarkers = new List<Line>();
         System.Drawing.Bitmap bmpMask;
 
-        public void PostProcessingFinished(WriteableBitmap wBmp)
+        public void PostProcessingFinished(System.Drawing.Bitmap bmp)
         {
+            WriteableBitmap wBmp = new WriteableBitmap(ToBitmapImage(bmp));
             wBmp.Freeze();
             App.Current.Dispatcher.Invoke(()=> ImageProc = wBmp);
         }
