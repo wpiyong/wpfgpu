@@ -63,6 +63,9 @@
     <Reference Include="ImageProcessorLib">
       <HintPath>..\..\..\..\work\Libs\ImageProcessorLib\ImageProcessorLib\bin\x64\Debug\ImageProcessorLib.dll</HintPath>
     </Reference>
+    <Reference Include="ImageProcLibOpenGL">
+      <HintPath>..\ImageProcLibOpenGL\bin\Debug\ImageProcLibOpenGL.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
     </Reference>
@@ -77,12 +80,6 @@
     </Reference>
     <Reference Include="OpenCvSharp.UserInterface">
       <HintPath>..\..\..\software\opencvsharp\net40\OpenCvSharp.UserInterface.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenTK, Version=3.2.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <HintPath>..\packages\OpenTK.3.2\lib\net20\OpenTK.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenTK.GLControl, Version=3.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <HintPath>..\packages\OpenTK.GLControl.3.1.0\lib\net20\OpenTK.GLControl.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -109,27 +106,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Effects\EffectInitParameters.cs" />
-    <Compile Include="Effects\IQEffect.cs" />
-    <Compile Include="Effects\IQEffect_ABF.cs" />
-    <Compile Include="Effects\IQEffect_BitmapImageTexture.cs" />
-    <Compile Include="Effects\IQEffect_Copy.cs" />
-    <Compile Include="Effects\IQEffect_LOG.cs" />
     <Compile Include="Models\AppSettings.cs" />
     <Compile Include="Models\PostProcessing.cs" />
     <Compile Include="Models\Utils.cs" />
-    <Compile Include="Pipeline\IQOpenGLRenderer.cs" />
-    <Compile Include="Util\EffectSettingsParameters.cs" />
-    <Compile Include="Util\FrameBufferProp.cs" />
-    <Compile Include="Util\Gl.cs" />
-    <Compile Include="Util\GlHelper.cs" />
-    <Compile Include="Util\IQFrameBuffer.cs" />
-    <Compile Include="Util\IQPreViewPort.cs" />
-    <Compile Include="Util\IQUtil.cs" />
-    <Compile Include="Util\ProgramShader.cs" />
-    <Compile Include="Util\RendererOptions.cs" />
-    <Compile Include="Util\RendererStats.cs" />
-    <Compile Include="Util\ShaderHelper.cs" />
     <Compile Include="ViewModels\ControlViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\RelayCommand.cs" />
@@ -173,25 +152,12 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <None Include="settings.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Shaders\abf_v1_0.frag">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Shaders\copy_v1_0.frag">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Shaders\log_v1_0.frag">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Shaders\orignalimage_v1_0.frag">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -215,11 +181,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\folder.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Shaders\vertexshader2d_v1_0.vsh">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

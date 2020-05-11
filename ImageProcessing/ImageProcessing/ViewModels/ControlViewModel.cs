@@ -19,6 +19,7 @@ using System.Windows.Media;
 using System.Runtime.InteropServices;
 using ImageProcessorLib;
 using Microsoft.Win32;
+using ImageProcLibOpenGL.Effects;
 
 namespace ImageProcessing.ViewModels
 {
@@ -41,7 +42,8 @@ namespace ImageProcessing.ViewModels
         SemiInverted,
         Gamma,
         WhiteDiamond,
-        DarkChannel
+        DarkChannel,
+        CLAHE
     }
 
     public enum ResultStatus
@@ -76,7 +78,7 @@ namespace ImageProcessing.ViewModels
 
             //Method = "FancyColor";
             ProcMethods = new ObservableCollection<string>() { "Canny", "AbsDiff", "GrabCut", "BGSub", "FancyColor",
-                "Glare", "ImageProcLib", "SemiInverted", "Gamma", "WhiteDiamond", "DarkChannel" };
+                "Glare", "ImageProcLib", "SemiInverted", "Gamma", "WhiteDiamond", "DarkChannel", "CLAHE" };
             Method = ProcMethods[0];
             UsingGamma = true;
 
@@ -90,6 +92,7 @@ namespace ImageProcessing.ViewModels
 
         System.Drawing.Bitmap bmB = null;
         System.Drawing.Bitmap bmF = null;
+        System.Drawing.Bitmap dstBmp = null;
 
         Uri uri;
         string name;
@@ -230,6 +233,27 @@ namespace ImageProcessing.ViewModels
                 }
             }
         }
+
+        bool _doingPostProc;
+        public bool DoingPostProc
+        {
+            get
+            {
+                return _doingPostProc;
+            }
+            set
+            {
+                _doingPostProc = value;
+                OnPropertyChanged("DoingPostProc");
+                if(value == true)
+                {
+                    postProcessing.enqueueImage(dstBmp, ImageProcLibOpenGL.Effects.Effects.ABF);
+                } else
+                {
+                    ProcImageThread(Method);
+                }
+            }
+        }
         #endregion property
 
         System.Windows.Point currentPoint;
@@ -245,7 +269,7 @@ namespace ImageProcessing.ViewModels
         void GPUProcessing()
         {
             //ImageProc = new WriteableBitmap(ToBitmapImage(bmF));
-            postProcessing.enqueueImage(bmF, Models.Effects.ABF);
+            postProcessing.enqueueImage(bmF, ImageProcLibOpenGL.Effects.Effects.ABF);
             
         }
 
@@ -290,7 +314,7 @@ namespace ImageProcessing.ViewModels
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Multiselect = true;
-            openFileDialog.Filter = "Image files (*.png;*.jpg)|*.png;*.jpg|All files (*.*)|*.*";
+            openFileDialog.Filter = "Image files (*.png;*.jpg;*.bmp)|*.png;*.jpg;*.bmp|All files (*.*)|*.*";
             //openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             openFileDialog.InitialDirectory = @"C:\opencv";
             if (openFileDialog.ShowDialog() == true)
@@ -431,13 +455,21 @@ namespace ImageProcessing.ViewModels
 
                 e.Result = new Result(ResultStatus.SUCCESS, null, dst);
             }
+            else if (method == Enum.GetName(typeof(ProcMethod), ProcMethod.CLAHE))
+            {
+                ContrastLimitHE(ref bmF, out System.Drawing.Bitmap dst);
+
+                e.Result = new Result(ResultStatus.SUCCESS, null, dst);
+            }
             else if (method == Enum.GetName(typeof(ProcMethod), ProcMethod.Gamma))
             {
                 double gamma = App.appSettings.LevelGamma;
+                double levelMax = App.appSettings.LevelMax;
+                double levelMin = App.appSettings.LevelMin;
                 System.Drawing.Bitmap tmp = null;
                 if (UsingGamma)
                 {
-                    GammaAdjustment(ref bmF, gamma, out tmp);
+                    GammaAdjustment(ref bmF, gamma, levelMin, levelMax, out tmp);
                 }
                 else
                 {
@@ -466,6 +498,12 @@ namespace ImageProcessing.ViewModels
             dst = ImageProcessorLib.ImageProcessing.DarkChannelPrior(src);
         }
 
+        void ContrastLimitHE(ref System.Drawing.Bitmap src, out System.Drawing.Bitmap dst)
+        {
+            double clipLimit = App.appSettings.ClipLimit;
+            dst = ImageProcessorLib.ImageProcessing.ContrastLimitHE(src, clipLimit);
+        }
+
         void WhiteDiamondAnalysis()
         {
             //string dir = @"C:\opencv\whitecolor\Fancy White";
@@ -486,10 +524,10 @@ namespace ImageProcessing.ViewModels
             int mod = files.Length - 64 * m;
 
             long timestamp = (long)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
-            string fileName = "nonwhitediamond_darkchannel_diff_" + timestamp.ToString() + ".csv";
+            string fileName = "nonwhitediamond_darkchannel_hue_diff_" + timestamp.ToString() + ".csv";
             if (white)
             {
-                fileName = "whitediamond_darkchannel_diff_" + timestamp.ToString() + ".csv";
+                fileName = "whitediamond_darkchannel_hue_diff_" + timestamp.ToString() + ".csv";
             }
             var filePath = dir + @"\" + fileName;
 
@@ -511,7 +549,7 @@ namespace ImageProcessing.ViewModels
             // hsl data saving for debugging
             using (StreamWriter writer = new StreamWriter(filePath))
             {
-                var line = string.Format("{0},{1},{2},{3},{4}", "index", "mean", "std", "percentile", "name");
+                var line = string.Format("{0},{1},{2},{3},{4},{5},{6}", "index", "mean", "std", "percentile", "name", "mean hue", "std hue");
                 writer.WriteLine(line);
                 for (int j = 0; j < m; j++)
                 {
@@ -521,9 +559,11 @@ namespace ImageProcessing.ViewModels
                         BitmapImage bitmapF = new BitmapImage(new Uri(files[i + offset]));
                         System.Drawing.Bitmap bmp = BitmapImage2Bitmap(bitmapF);
                         double gamma = App.appSettings.LevelGamma;
+                        double levelMax = App.appSettings.LevelMax;
+                        double levelMin = App.appSettings.LevelMin;
                         System.Drawing.Bitmap tmp = null;
 
-                        GammaAdjustment(ref bmp, gamma, out tmp);
+                        GammaAdjustment(ref bmp, gamma, levelMin, levelMax, out tmp);
                         if (usingGamma)
                         {
                             srcList.Add(tmp);
@@ -534,12 +574,21 @@ namespace ImageProcessing.ViewModels
                         bgList.Add(bmp);
                         nameList.Add(System.IO.Path.GetFileName(files[i + offset]));
                     }
-                    imageAnalyzer.WhiteDiamondAnalysis(ref srcList, ref bgList, ref nameList, out List<Tuple<double, double, double>> mspList);
+                    imageAnalyzer.WhiteDiamondAnalysis(ref srcList, ref bgList, ref nameList, out List<Tuple<double, double, double>> mspList, out List<Tuple<double, double, double>> mspHueList);
                     for (int i = 0; i < mspList.Count(); i++)
                     {
-                        line = string.Format("{0},{1},{2},{3},{4}", i + offset, mspList[i].Item1, mspList[i].Item2, mspList[i].Item3, files[i + offset]);
-                        Console.WriteLine(line);
-                        writer.WriteLine(line);
+                        if (mspHueList != null && mspHueList.Count > 0)
+                        {
+                            line = string.Format("{0},{1},{2},{3},{4},{5},{6}", i + offset, mspList[i].Item1, mspList[i].Item2, mspList[i].Item3, files[i + offset], mspHueList[i].Item1, mspHueList[i].Item2);
+                            Console.WriteLine(line);
+                            writer.WriteLine(line);
+                        }
+                        else
+                        {
+                            line = string.Format("{0},{1},{2},{3},{4}", i + offset, mspList[i].Item1, mspList[i].Item2, mspList[i].Item3, files[i + offset]);
+                            Console.WriteLine(line);
+                            writer.WriteLine(line);
+                        }
                     }
                     srcList.Clear();
                     bgList.Clear();
@@ -552,9 +601,11 @@ namespace ImageProcessing.ViewModels
                         BitmapImage bitmapF = new BitmapImage(new Uri(files[i + offset]));
                         System.Drawing.Bitmap bmp = BitmapImage2Bitmap(bitmapF);
                         double gamma = App.appSettings.LevelGamma;
+                        double levelMax = App.appSettings.LevelMax;
+                        double levelMin = App.appSettings.LevelMin;
                         System.Drawing.Bitmap tmp = null;
 
-                        GammaAdjustment(ref bmp, gamma, out tmp);
+                        GammaAdjustment(ref bmp, gamma, levelMin, levelMax, out tmp);
 
                         if (usingGamma)
                         {
@@ -567,12 +618,21 @@ namespace ImageProcessing.ViewModels
                         bgList.Add(bmp);
                         nameList.Add(System.IO.Path.GetFileName(files[i + offset]));
                     }
-                    imageAnalyzer.WhiteDiamondAnalysis(ref srcList, ref bgList, ref nameList, out List<Tuple<double, double, double>> mspList);
+                    imageAnalyzer.WhiteDiamondAnalysis(ref srcList, ref bgList, ref nameList, out List<Tuple<double, double, double>> mspList, out List<Tuple<double, double, double>> mspHueList);
                     for (int i = 0; i < mspList.Count(); i++)
                     {
-                        line = string.Format("{0},{1},{2},{3},{4}", i + offset, mspList[i].Item1, mspList[i].Item2, mspList[i].Item3, files[i + offset]);
-                        Console.WriteLine(line);
-                        writer.WriteLine(line);
+                        if (mspHueList != null && mspHueList.Count > 0)
+                        {
+                            line = string.Format("{0},{1},{2},{3},{4},{5},{6}", i + offset, mspList[i].Item1, mspList[i].Item2, mspList[i].Item3, files[i + offset], mspHueList[i].Item1, mspHueList[i].Item2);
+                            Console.WriteLine(line);
+                            writer.WriteLine(line);
+                        }
+                        else
+                        { 
+                            line = string.Format("{0},{1},{2},{3},{4}", i + offset, mspList[i].Item1, mspList[i].Item2, mspList[i].Item3, files[i + offset]);
+                            Console.WriteLine(line);
+                            writer.WriteLine(line);
+                        }
                     }
                     srcList.Clear();
                     bgList.Clear();
@@ -581,10 +641,10 @@ namespace ImageProcessing.ViewModels
             }
         }
 
-        void GammaAdjustment(ref System.Drawing.Bitmap src, double gamma, out System.Drawing.Bitmap dst)
+        void GammaAdjustment(ref System.Drawing.Bitmap src, double gamma, double fmin, double fmax, out System.Drawing.Bitmap dst)
         {
             dst = null;
-            ImageProcessorLib.ImageProcessing.LevelAdjustment2(ref src, out dst, gamma, 50, 220);
+            ImageProcessorLib.ImageProcessing.LevelAdjustment2(ref src, out dst, gamma, fmin, fmax);
         }
 
         void HazeSemiInverted(ref System.Drawing.Bitmap src, out System.Drawing.Bitmap dst)
@@ -614,8 +674,13 @@ namespace ImageProcessing.ViewModels
             if (((Result)e.Result).Status == ResultStatus.SUCCESS)
             {
                 System.Drawing.Bitmap res = (System.Drawing.Bitmap)((Result)e.Result).Value;
+                dstBmp = res;
                 _imageProc = new WriteableBitmap(ToBitmapImage(res));
                 OnPropertyChanged("ImageProc");
+                if (DoingPostProc)
+                {
+                    postProcessing.enqueueImage(dstBmp, ImageProcLibOpenGL.Effects.Effects.ABF);
+                }
             }
         }
 
@@ -1146,7 +1211,7 @@ namespace ImageProcessing.ViewModels
             using (MemoryStream outStream = new MemoryStream())
             {
                 BitmapEncoder enc = new BmpBitmapEncoder();
-                enc.Frames.Add(BitmapFrame.Create(bitmapImage));
+                enc.Frames.Add(BitmapFrame.Create(bitmapImage, null, null, null));
                 enc.Save(outStream);
                 System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(outStream);
 

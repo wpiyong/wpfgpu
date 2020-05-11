@@ -60,12 +60,10 @@ C:\opencv\Test\ImageProcessing\ImageProcessing\bin\x64\Debug\ImageProcessorLib.d
 C:\opencv\Test\ImageProcessing\ImageProcessing\bin\x64\Debug\OpenTK.dll
 C:\opencv\Test\ImageProcessing\ImageProcessing\bin\x64\Debug\OpenTK.pdb
 C:\opencv\Test\ImageProcessing\ImageProcessing\bin\x64\Debug\OpenTK.xml
-C:\opencv\Test\ImageProcessing\ImageProcessing\obj\x64\Debug\ImageProcessing_Content.g.cs
 C:\opencv\Test\ImageProcessing\ImageProcessing\bin\x64\Debug\OpenTK.GLControl.dll
 C:\opencv\Test\ImageProcessing\ImageProcessing\bin\x64\Debug\OpenTK.GLControl.pdb
 C:\opencv\Test\ImageProcessing\ImageProcessing\bin\x64\Debug\OpenTK.GLControl.xml
-C:\opencv\Test\ImageProcessing\ImageProcessing\bin\x64\Debug\Shaders\vertexshader2d_v1_0.vsh
-C:\opencv\Test\ImageProcessing\ImageProcessing\bin\x64\Debug\Shaders\copy_v1_0.frag
-C:\opencv\Test\ImageProcessing\ImageProcessing\bin\x64\Debug\Shaders\orignalimage_v1_0.frag
-C:\opencv\Test\ImageProcessing\ImageProcessing\bin\x64\Debug\Shaders\abf_v1_0.frag
-C:\opencv\Test\ImageProcessing\ImageProcessing\bin\x64\Debug\Shaders\log_v1_0.frag
+C:\opencv\Test\ImageProcessing\ImageProcessing\bin\x64\Debug\ImageProcLibOpenGL.dll
+C:\opencv\Test\ImageProcessing\ImageProcessing\bin\x64\Debug\ImageProcLibOpenGL.pdb
+C:\opencv\Test\ImageProcessing\ImageProcessing\bin\x64\Debug\ImageProcLibOpenGL.dll.config
+C:\opencv\Test\ImageProcessing\ImageProcessing\obj\x64\Debug\ImageProcessing.csprojAssemblyReference.cache

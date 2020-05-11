@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ImageProcessing.Views"
         mc:Ignorable="d"
-        Title="Settings" Height="360" Width="500">
+        Title="Settings" Height="400" Width="500">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition></RowDefinition>
@@ -13,12 +13,16 @@
         </Grid.RowDefinitions>
         <TabControl Grid.Row="0" Margin="5,0">
             <TabItem Header="Image Proc">
-                <Grid Margin="20">
+                <Grid Margin="15">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="0.5*"></ColumnDefinition>
                         <ColumnDefinition Width="*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="0"></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
                         <RowDefinition></RowDefinition>
                         <RowDefinition></RowDefinition>
                         <RowDefinition></RowDefinition>
@@ -29,26 +33,38 @@
                         <RowDefinition></RowDefinition>
                     </Grid.RowDefinitions>
                     <Label x:Name="Label" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center">Gamma:</Label>
-                    <TextBox Grid.Row="1" Grid.Column="1" TextAlignment="Center" Height="{Binding ElementName=Label, Path=ActualHeight}"
+                    <TextBox Grid.Row="1" Grid.Column="1" TextAlignment="Center" VerticalContentAlignment="Center" Height="{Binding ElementName=Label, Path=ActualHeight}"
                              Text="{Binding Gamma, Mode=TwoWay}"></TextBox>
                     <Label x:Name="Label0" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center">Dark area threshold:</Label>
-                    <TextBox Grid.Row="2" Grid.Column="1" TextAlignment="Center" Height="{Binding ElementName=Label0, Path=ActualHeight}"
+                    <TextBox Grid.Row="2" Grid.Column="1" TextAlignment="Center" VerticalContentAlignment="Center" Height="{Binding ElementName=Label0, Path=ActualHeight}"
                              Text="{Binding DarkAreaThreshold, Mode=TwoWay}"></TextBox>
                     <Label x:Name="Label1" Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center">Bright area threshold:</Label>
-                    <TextBox Grid.Row="3" Grid.Column="1" TextAlignment="Center" Height="{Binding ElementName=Label1, Path=ActualHeight}"
+                    <TextBox Grid.Row="3" Grid.Column="1" TextAlignment="Center" VerticalContentAlignment="Center" Height="{Binding ElementName=Label1, Path=ActualHeight}"
                              Text="{Binding BrightAreaThreshold, Mode=TwoWay}"></TextBox>
                     <Label x:Name="Label2" Grid.Row="4" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center">Iterations:</Label>
-                    <TextBox Grid.Row="4" Grid.Column="1" TextAlignment="Center" Height="{Binding ElementName=Label2, Path=ActualHeight}"
+                    <TextBox Grid.Row="4" Grid.Column="1" TextAlignment="Center" VerticalContentAlignment="Center" Height="{Binding ElementName=Label2, Path=ActualHeight}"
                              Text="{Binding Iterations, Mode=TwoWay}"></TextBox>
                     <Label x:Name="Label3" Grid.Row="5" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center">Iterations 2:</Label>
-                    <TextBox Grid.Row="5" Grid.Column="1" TextAlignment="Center" Height="{Binding ElementName=Label3, Path=ActualHeight}"
+                    <TextBox Grid.Row="5" Grid.Column="1" TextAlignment="Center" VerticalContentAlignment="Center" Height="{Binding ElementName=Label3, Path=ActualHeight}"
                              Text="{Binding Iterations2, Mode=TwoWay}"></TextBox>
                     <Label x:Name="Clusters" Grid.Row="6" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center">Clusters:</Label>
-                    <TextBox Grid.Row="6" Grid.Column="1" TextAlignment="Center" Height="{Binding ElementName=Cluster, Path=ActualHeight}"
+                    <TextBox Grid.Row="6" Grid.Column="1" TextAlignment="Center" VerticalContentAlignment="Center" Height="{Binding ElementName=Cluster, Path=ActualHeight}"
                              Text="{Binding Clusters, Mode=TwoWay}"></TextBox>
                     <Label x:Name="LevelGamma" Grid.Row="7" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center">Level Gamma:</Label>
-                    <TextBox Grid.Row="7" Grid.Column="1" TextAlignment="Center" Height="{Binding ElementName=LevelGamma, Path=ActualHeight}"
+                    <TextBox Grid.Row="7" Grid.Column="1" TextAlignment="Center" VerticalContentAlignment="Center" Height="{Binding ElementName=LevelGamma, Path=ActualHeight}"
                              Text="{Binding LevelGamma, Mode=TwoWay}"></TextBox>
+                    <Label x:Name="LevelMax" Grid.Row="8" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center">Level Max:</Label>
+                    <TextBox Grid.Row="8" Grid.Column="1" TextAlignment="Center" VerticalContentAlignment="Center" Height="{Binding ElementName=LevelMax, Path=ActualHeight}"
+                             Text="{Binding LevelMax, Mode=TwoWay}"></TextBox>
+                    <Label x:Name="LevelMin" Grid.Row="9" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center">Level Min:</Label>
+                    <TextBox Grid.Row="9" Grid.Column="1" TextAlignment="Center" VerticalContentAlignment="Center" Height="{Binding ElementName=LevelMin, Path=ActualHeight}"
+                             Text="{Binding LevelMin, Mode=TwoWay}"></TextBox>
+                    <Label x:Name="ABFTheta" Grid.Row="10" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center">ABF Theta:</Label>
+                    <TextBox Grid.Row="10" Grid.Column="1" TextAlignment="Center" VerticalContentAlignment="Center" Height="{Binding ElementName=ABFTheta, Path=ActualHeight}"
+                             Text="{Binding ABFTheta, Mode=TwoWay}"></TextBox>
+                    <Label x:Name="ClipLimit" Grid.Row="11" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center">Clip Limit:</Label>
+                    <TextBox Grid.Row="11" Grid.Column="1" TextAlignment="Center" VerticalContentAlignment="Center" Height="{Binding ElementName=ClipLimit, Path=ActualHeight}"
+                             Text="{Binding ClipLimit, Mode=TwoWay}"></TextBox>
                     <!--<Label x:Name="Label1" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center">Multithreading:</Label>
                          <CheckBox Grid.Row="1" Grid.Column="1" VerticalContentAlignment="Center" Width="24" Height="24" IsThreeState="False" IsChecked="{Binding Path=MultiThreading, Mode=TwoWay}"></CheckBox>-->
 

@@ -19,6 +19,10 @@ namespace ImageProcessing.Models
         public double Gamma { get; set; }
         public int Clusters { get; set; }
         public double LevelGamma { get; set; }
+        public double LevelMax { get; set; }
+        public double LevelMin { get; set; }
+        public double ABFTheta { get; set; }
+        public double ClipLimit { get; set; }
 
         public AppSettings()
         {

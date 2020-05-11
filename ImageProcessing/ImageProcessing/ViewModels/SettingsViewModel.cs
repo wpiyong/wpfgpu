@@ -24,6 +24,10 @@ namespace ImageProcessing.ViewModels
             Gamma = App.appSettings.Gamma;
             Clusters = App.appSettings.Clusters;
             LevelGamma = App.appSettings.LevelGamma;
+            LevelMax = App.appSettings.LevelMax;
+            LevelMin = App.appSettings.LevelMin;
+            ABFTheta = App.appSettings.ABFTheta;
+            ClipLimit = App.appSettings.ClipLimit;
 
             CommandUpdate = new RelayCommand(param => UpdateSettings(param));
             CommandCancel = new RelayCommand(param => CancelSettings(param));
@@ -67,6 +71,82 @@ namespace ImageProcessing.ViewModels
                 }
                 _levelgamma = value;
                 OnPropertyChanged("LevelGamma");
+            }
+        }
+
+        double _levelMax;
+        public double LevelMax
+        {
+            get
+            {
+                return _levelMax;
+            }
+
+            set
+            {
+                if (_levelMax == value)
+                {
+                    return;
+                }
+                _levelMax = value;
+                OnPropertyChanged("LevelMax");
+            }
+        }
+
+        double _levelMin;
+        public double LevelMin
+        {
+            get
+            {
+                return _levelMin;
+            }
+
+            set
+            {
+                if (_levelMin == value)
+                {
+                    return;
+                }
+                _levelMin = value;
+                OnPropertyChanged("LevelMin");
+            }
+        }
+
+        double _aBFTheta;
+        public double ABFTheta
+        {
+            get
+            {
+                return _aBFTheta;
+            }
+
+            set
+            {
+                if (_aBFTheta == value)
+                {
+                    return;
+                }
+                _aBFTheta = value;
+                OnPropertyChanged("ABFTheta");
+            }
+        }
+
+        double _clipLimit;
+        public double ClipLimit
+        {
+            get
+            {
+                return _clipLimit;
+            }
+
+            set
+            {
+                if (_clipLimit == value)
+                {
+                    return;
+                }
+                _clipLimit = value;
+                OnPropertyChanged("ClipLimit");
             }
         }
 
@@ -213,6 +293,30 @@ namespace ImageProcessing.ViewModels
             {
                 settingsChanged = true;
                 App.appSettings.LevelGamma = LevelGamma;
+            }
+
+            if (App.appSettings.LevelMax != LevelMax)
+            {
+                settingsChanged = true;
+                App.appSettings.LevelMax = LevelMax;
+            }
+
+            if (App.appSettings.LevelMin != LevelMin)
+            {
+                settingsChanged = true;
+                App.appSettings.LevelMin = LevelMin;
+            }
+
+            if (App.appSettings.ABFTheta != ABFTheta)
+            {
+                settingsChanged = true;
+                App.appSettings.ABFTheta = ABFTheta;
+            }
+
+            if (App.appSettings.ClipLimit != ClipLimit)
+            {
+                settingsChanged = true;
+                App.appSettings.ClipLimit = ClipLimit;
             }
 
             if (App.appSettings.Clusters != Clusters)

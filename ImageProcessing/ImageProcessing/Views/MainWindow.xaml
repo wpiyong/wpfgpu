@@ -38,6 +38,7 @@
                             <CheckBox ToolTip="gamma" VerticalContentAlignment="Center" Width="24" Height="24" IsThreeState="False" IsChecked="{Binding Path=UsingGamma, Mode=TwoWay}" VerticalAlignment="Bottom"></CheckBox>
                             <CheckBox ToolTip="manual mask" VerticalContentAlignment="Center" Width="24" Height="24" IsThreeState="False" IsChecked="{Binding Path=ManualMask, Mode=TwoWay}" VerticalAlignment="Bottom"></CheckBox>
                             <CheckBox ToolTip="foreground line marker" VerticalContentAlignment="Center" Width="24" Height="24" IsThreeState="False" IsChecked="{Binding Path=ForegroundLineMarker, Mode=TwoWay}" VerticalAlignment="Bottom"></CheckBox>
+                            <CheckBox ToolTip="Post processing" VerticalContentAlignment="Center" Width="24" Height="24" IsThreeState="False" IsChecked="{Binding Path=DoingPostProc, Mode=TwoWay}" VerticalAlignment="Bottom"></CheckBox>
                             <Button Width="50" Content="Clear" ToolTip="clear line markers" Style="{StaticResource ToolbarButton}"
                                     Command="{Binding CommandClearLineMarkers}"></Button>
                             <Button Width="50" Content="Post Processing" ToolTip="GPU Processing" Style="{StaticResource ToolbarButton}"

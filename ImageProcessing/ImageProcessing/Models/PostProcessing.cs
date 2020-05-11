@@ -5,15 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Media.Imaging;
-using ImageProcessing.Pipeline;
+using ImageProcLibOpenGL;
 
 namespace ImageProcessing.Models
 {
-    public enum Effects
-    {
-        NO_EFFECT,
-        ABF
-    }
 
     public delegate void ProcessingFinishedHandler(WriteableBitmap wBmp);
 
@@ -26,9 +21,7 @@ namespace ImageProcessing.Models
         Queue<System.Drawing.Bitmap> imgQ = new Queue<System.Drawing.Bitmap>();
         bool exit = false;
 
-        Effects effect = Effects.NO_EFFECT;
-
-        WriteableBitmap postProcImage;
+        ImageProcLibOpenGL.Effects.Effects effect = ImageProcLibOpenGL.Effects.Effects.NO_EFFECT;
 
         IQOpenGLRenderer renderer = new IQOpenGLRenderer(1, 1);
 
@@ -72,7 +65,7 @@ namespace ImageProcessing.Models
                 {
                     Console.WriteLine("Performing effect: ");
                     renderer.setBitmap(img);
-                    renderer.setEffect(effect);
+                    renderer.setEffect(effect, (float)App.appSettings.ABFTheta);
                     renderer.DrawFrame();
                     RaiseProcessingFinishedEvent(new WriteableBitmap(ToBitmapImage(renderer.m_BmpDst)));
                 }
@@ -85,7 +78,7 @@ namespace ImageProcessing.Models
             Console.WriteLine("post processing thread exits");
         }
 
-        public void enqueueImage(System.Drawing.Bitmap bmp, Effects effect)
+        public void enqueueImage(System.Drawing.Bitmap bmp, ImageProcLibOpenGL.Effects.Effects effect)
         {
             lock (_locker)
             {
