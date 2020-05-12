@@ -84,6 +84,7 @@ namespace ImageProcessing.ViewModels
 
             postProcessing = new PostProcessing();
             postProcessing.AddProcessingFinishedSubscriber(new ProcessingFinishedHandler(PostProcessingFinished));
+            postProcessing.AddProcessingErrorSubscriber(new ProcessingErrorHandler(PostProcessingError));
         }
 
         PostProcessing postProcessing;
@@ -265,6 +266,11 @@ namespace ImageProcessing.ViewModels
             WriteableBitmap wBmp = new WriteableBitmap(ToBitmapImage(bmp));
             wBmp.Freeze();
             App.Current.Dispatcher.Invoke(()=> ImageProc = wBmp);
+        }
+
+        public void PostProcessingError(string err)
+        {
+            App.Current.Dispatcher.Invoke(()=> MessageBox.Show(err, "Error"));
         }
 
         void GPUProcessing()

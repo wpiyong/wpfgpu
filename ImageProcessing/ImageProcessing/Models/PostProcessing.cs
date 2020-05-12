@@ -11,6 +11,7 @@ namespace ImageProcessing.Models
 {
 
     public delegate void ProcessingFinishedHandler(System.Drawing.Bitmap wBmp);
+    public delegate void ProcessingErrorHandler(string err);
 
     public class PostProcessing
     {
@@ -26,6 +27,7 @@ namespace ImageProcessing.Models
         IQOpenGLRenderer renderer = new IQOpenGLRenderer(1, 1);
 
         public event ProcessingFinishedHandler processingFinished;
+        public event ProcessingErrorHandler processingError;
  
         public PostProcessing()
         {
@@ -39,9 +41,19 @@ namespace ImageProcessing.Models
             processingFinished?.Invoke(wBmp);
         }
 
+        void RaiseProcessingErrorEvent(string err)
+        {
+            processingError?.Invoke(err);
+        }
+
         public void AddProcessingFinishedSubscriber(ProcessingFinishedHandler h)
         {
             processingFinished += h;
+        }
+
+        public void AddProcessingErrorSubscriber(ProcessingErrorHandler h)
+        {
+            processingError += h;
         }
 
         void Processing()
@@ -63,11 +75,18 @@ namespace ImageProcessing.Models
                 }
                 if (img != null)
                 {
-                    Console.WriteLine("Performing effect: ");
-                    renderer.setBitmap(img);
-                    renderer.setEffect(effect, (float)App.appSettings.ABFTheta);
-                    renderer.DrawFrame();
-                    RaiseProcessingFinishedEvent(renderer.m_BmpDst);
+                    try
+                    {
+                        Console.WriteLine("Performing effect: ");
+                        renderer.setBitmap(img);
+                        renderer.setEffect(effect, (float)App.appSettings.ABFTheta);
+                        renderer.DrawFrame();
+                        RaiseProcessingFinishedEvent(renderer.m_BmpDst);
+                    } catch(Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        RaiseProcessingErrorEvent(ex.Message);
+                    }
                 }
                 else
                 {
